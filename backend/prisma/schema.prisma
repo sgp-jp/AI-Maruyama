@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id               String   @id @default(cuid())
+  name             String
+  customerName     String
+  status           String   @default("hearing")
+  assignee         String
+  updatedAt        DateTime @updatedAt
+  createdAt        DateTime @default(now())
+  hearingInput     HearingInput?
+  diagnosisResult  DiagnosisResult?
+  proposalDraft    ProposalDraft?
+  handoverMemo     HandoverMemo?
+}
+
+model HearingInput {
+  id                String   @id @default(cuid())
+  projectId         String   @unique
+  payloadJson       Json
+  updatedAt         DateTime @updatedAt
+  project           Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model DiagnosisResult {
+  id                String   @id @default(cuid())
+  projectId         String   @unique
+  payloadJson       Json
+  updatedAt         DateTime @updatedAt
+  project           Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ProposalDraft {
+  id                String   @id @default(cuid())
+  projectId         String   @unique
+  payloadJson       Json
+  updatedAt         DateTime @updatedAt
+  project           Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model HandoverMemo {
+  id                String   @id @default(cuid())
+  projectId         String   @unique
+  payloadJson       Json
+  updatedAt         DateTime @updatedAt
+  project           Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  projectId  String?
+  action     String
+  actor      String
+  detailJson Json
+  createdAt  DateTime @default(now())
+}

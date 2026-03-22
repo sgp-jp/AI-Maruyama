@@ -1,0 +1,8 @@
+node_modules
+.next
+dist
+.env
+backups
+data/uploads/*
+data/exports/*
+*.log

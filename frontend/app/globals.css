@@ -1,0 +1,33 @@
+:root {
+  --bg: #f5f4ef;
+  --text: #1f2328;
+  --card: #ffffff;
+  --line: #d9d5c9;
+  --accent: #2f6f58;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  background: radial-gradient(circle at top right, #ffffff, var(--bg));
+  color: var(--text);
+}
+a { color: var(--accent); text-decoration: none; }
+main { max-width: 1040px; margin: 0 auto; padding: 24px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.grid { display: grid; gap: 12px; }
+.grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+input, select, textarea, button {
+  width: 100%;
+  border: 1px solid #c5c0b2;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+}
+button { cursor: pointer; background: #2f6f58; color: #fff; font-weight: 700; }
+button.secondary { background: #f3f3f3; color: #333; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 99px; background: #e7f4ee; color: #245843; font-size: 12px; }
+@media (max-width: 768px) {
+  main { padding: 12px; }
+  .grid.two { grid-template-columns: 1fr; }
+}
