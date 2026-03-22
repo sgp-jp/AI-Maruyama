@@ -30,16 +30,16 @@ HTTPSを使う場合のみ:
 EC2へSSH後:
 
 ```bash
-sudo mkdir -p /opt/gaiko-mvp
-sudo chown -R ec2-user:ec2-user /opt/gaiko-mvp
-cd /opt/gaiko-mvp
+sudo mkdir -p /opt/AI-Maruyama
+sudo chown -R ec2-user:ec2-user /opt/AI-Maruyama
+cd /opt/AI-Maruyama
 ```
 
 リポジトリを取得:
 
 ```bash
-git clone <YOUR_REPOSITORY_URL> /opt/gaiko-mvp
-cd /opt/gaiko-mvp
+git clone <YOUR_REPOSITORY_URL> /opt/AI-Maruyama
+cd /opt/AI-Maruyama
 ```
 
 Docker導入:
@@ -54,7 +54,7 @@ exit
 ## 4. 環境変数設定
 
 ```bash
-cd /opt/gaiko-mvp
+cd /opt/AI-Maruyama
 cp .env.ec2.example .env
 vi .env
 ```
@@ -66,7 +66,7 @@ vi .env
 ## 5. デプロイ
 
 ```bash
-cd /opt/gaiko-mvp
+cd /opt/AI-Maruyama
 bash scripts/deploy_ec2.sh
 ```
 
@@ -83,24 +83,24 @@ curl -sS http://localhost/api/health
 ## 6. 自動起動（任意だが推奨）
 
 ```bash
-sudo cp infra/gaiko-mvp.service /etc/systemd/system/gaiko-mvp.service
+sudo cp infra/AI-Maruyama.service /etc/systemd/system/AI-Maruyama.service
 sudo systemctl daemon-reload
-sudo systemctl enable gaiko-mvp
-sudo systemctl start gaiko-mvp
-sudo systemctl status gaiko-mvp --no-pager
+sudo systemctl enable AI-Maruyama
+sudo systemctl start AI-Maruyama
+sudo systemctl status AI-Maruyama --no-pager
 ```
 
 ## 7. 更新デプロイ
 
 ```bash
-cd /opt/gaiko-mvp
+cd /opt/AI-Maruyama
 bash scripts/deploy_ec2.sh
 ```
 
 ## 8. バックアップ
 
 ```bash
-cd /opt/gaiko-mvp
+cd /opt/AI-Maruyama
 ./scripts/backup.sh
 ```
 

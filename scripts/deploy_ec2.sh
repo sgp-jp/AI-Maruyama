@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_DIR=${APP_DIR:-/opt/gaiko-mvp}
+APP_DIR=${APP_DIR:-/opt/AI-Maruyama}
 BRANCH=${BRANCH:-main}
 
 if [[ ! -d "$APP_DIR/.git" ]]; then
