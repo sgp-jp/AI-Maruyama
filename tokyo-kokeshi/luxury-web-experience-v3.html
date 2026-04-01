@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tokyo こけし | Luxury Web Experience v3</title>
+  <style>
+    :root {
+      --bg: #05060a;
+      --panel: rgba(255,255,255,.04);
+      --border: rgba(255,255,255,.1);
+      --text: #f5f2e9;
+      --muted: rgba(245,242,233,.72);
+      --muted2: rgba(245,242,233,.48);
+      --gold: #d6c6a3;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --r-lg: 32px;
+      --r-md: 22px;
+      --r-pill: 999px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: radial-gradient(circle at top, rgba(214,198,163,.08), transparent 35%), var(--bg); color: var(--text); font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; }
+    body { overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    .grain::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 3px 3px;
+      opacity: .06;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .cursor-glow {
+      position: fixed;
+      width: 320px;
+      height: 320px;
+      border-radius: 999px;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(214,198,163,.13), transparent 68%);
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      filter: blur(12px);
+      transition: transform .08s linear;
+    }
+    .wrap { position: relative; z-index: 1; }
+    .container { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+    header {
+      position: sticky; top: 0; z-index: 10;
+      backdrop-filter: blur(14px);
+      background: rgba(5,6,10,.5);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0;
+    }
+    .brand {
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .pill {
+      padding: 10px 18px;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .pill.cta {
+      color: #111;
+      background: linear-gradient(135deg, #efe4c9, #cdb78d);
+      border: none;
+    }
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      place-items: center;
+      padding: 80px 0 48px;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 34px;
+      align-items: stretch;
+    }
+    .eyebrow {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: .28em;
+      font-size: 12px;
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0;
+      font-weight: 500;
+      font-size: clamp(40px, 7vw, 88px);
+      line-height: .94;
+      letter-spacing: -.03em;
+    }
+    .sub {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.9;
+      max-width: 620px;
+      margin-top: 24px;
+    }
+    .hero-actions {
+      display: flex; flex-wrap: wrap; gap: 14px;
+      margin-top: 30px;
+    }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 14px 22px;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--border);
+      min-width: 180px;
+      font-size: 13px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transition: .25s ease;
+      background: rgba(255,255,255,.02);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .button:hover { transform: translateY(-2px); border-color: rgba(214,198,163,.45); }
+    .button.primary {
+      background: linear-gradient(135deg, #f3e6cc, #ccb58a);
+      color: #131313;
+      border: none;
+      box-shadow: 0 14px 30px rgba(0,0,0,.28);
+    }
+    .hero-card, .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow);
+    }
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 620px;
+      display: flex;
+      align-items: end;
+      padding: 28px;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(214,198,163,.28), transparent 24%),
+        radial-gradient(circle at 50% 60%, rgba(255,255,255,.08), transparent 26%),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    }
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,.03), rgba(0,0,0,.32));
+      pointer-events: none;
+    }
+    .kokeshi-sculpture {
+      position: absolute;
+      inset: 40px 28px 110px 28px;
+      display: grid;
+      place-items: center;
+    }
+    .kokeshi {
+      position: relative;
+      width: min(100%, 330px);
+      height: 100%;
+      display: grid;
+      place-items: center;
+      filter: drop-shadow(0 30px 80px rgba(0,0,0,.55));
+    }
+    .kokeshi-body {
+      position: relative;
+      width: 190px;
+      height: 430px;
+      border-radius: 999px 999px 60px 60px;
+      background: linear-gradient(180deg, #1d1a1a 0%, #6d1322 52%, #29080f 100%);
+      border: 1px solid rgba(255,255,255,.14);
+      overflow: hidden;
+    }
+    .kokeshi-body::before,
+    .kokeshi-body::after {
+      content: "";
+      position: absolute;
+      left: 50%; transform: translateX(-50%);
+      border-radius: 999px;
+    }
+    .kokeshi-body::before {
+      top: 60px;
+      width: 136px;
+      height: 136px;
+      background: radial-gradient(circle at 50% 40%, #f3e7cf, #d7c2a1 72%, #b7966c 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
+    }
+    .kokeshi-body::after {
+      bottom: 58px;
+      width: 116px;
+      height: 1px;
+      box-shadow:
+        0 0 0 0 rgba(214,198,163,.6),
+        0 -34px 0 0 rgba(214,198,163,.24),
+        0 -68px 0 0 rgba(214,198,163,.18),
+        0 -102px 0 0 rgba(214,198,163,.12);
+    }
+    .face {
+      position: absolute;
+      top: 102px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 84px;
+      height: 74px;
+    }
+    .eye, .mouth {
+      position: absolute;
+      background: #121212;
+      opacity: .86;
+      border-radius: 999px;
+    }
+    .eye { width: 8px; height: 8px; top: 24px; }
+    .eye.left { left: 18px; }
+    .eye.right { right: 18px; }
+    .mouth { width: 20px; height: 2px; bottom: 16px; left: 50%; transform: translateX(-50%); }
+    .floral {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 28% 64%, rgba(255,255,255,.06) 0 8%, transparent 8.5%),
+        radial-gradient(circle at 72% 62%, rgba(255,255,255,.05) 0 7%, transparent 7.5%),
+        radial-gradient(circle at 36% 77%, rgba(214,198,163,.18) 0 8%, transparent 8.5%),
+        radial-gradient(circle at 65% 80%, rgba(214,198,163,.16) 0 7%, transparent 7.5%);
+      mix-blend-mode: screen;
+      opacity: .7;
+    }
+    .hero-note {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      width: 100%;
+      z-index: 1;
+    }
+    .hero-note p { margin: 0; color: var(--muted); line-height: 1.8; }
+    .price-chip {
+      padding: 12px 16px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      color: var(--gold);
+      font-size: 13px;
+      letter-spacing: .08em;
+      white-space: nowrap;
+    }
+    section { padding: 28px 0 88px; }
+    .section-head { margin-bottom: 28px; }
+    .section-kicker {
+      color: var(--gold);
+      font-size: 12px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 54px);
+      line-height: 1.05;
+      margin: 0;
+      font-weight: 500;
+      letter-spacing: -.02em;
+    }
+    .section-copy {
+      margin-top: 14px;
+      max-width: 720px;
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 16px;
+    }
+    .mood-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .mood-btn {
+      padding: 13px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 13px;
+      transition: .25s ease;
+    }
+    .mood-btn.active, .mood-btn:hover {
+      color: #151515;
+      background: linear-gradient(135deg, #f0e3c9, #ccb68d);
+      border-color: transparent;
+    }
+    .selection-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 22px;
+      align-items: start;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .product-card {
+      padding: 24px;
+      cursor: pointer;
+      transition: .3s ease;
+      min-height: 230px;
+      position: relative;
+      overflow: hidden;
+    }
+    .product-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -35% auto;
+      width: 160px;
+      height: 160px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(214,198,163,.16), transparent 70%);
+      pointer-events: none;
+    }
+    .product-card:hover, .product-card.active {
+      transform: translateY(-4px);
+      border-color: rgba(214,198,163,.34);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+    }
+    .card-meta {
+      display: flex; justify-content: space-between; gap: 16px; align-items: center;
+      color: var(--muted2); font-size: 12px; text-transform: uppercase; letter-spacing: .14em;
+    }
+    .card-name { margin: 18px 0 8px; font-size: 25px; }
+    .card-price { color: var(--gold); font-size: 15px; letter-spacing: .1em; }
+    .card-copy { color: var(--muted); line-height: 1.8; margin-top: 16px; font-size: 15px; }
+    .detail {
+      padding: 26px;
+      position: sticky;
+      top: 94px;
+    }
+    .detail-visual {
+      height: 300px;
+      border-radius: 24px;
+      margin-bottom: 22px;
+      background:
+        radial-gradient(circle at 50% 30%, rgba(214,198,163,.24), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.08);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .detail-visual .mini-kokeshi {
+      width: 120px;
+      height: 220px;
+      border-radius: 999px 999px 38px 38px;
+      background: linear-gradient(180deg, #131313 0%, #4b0c17 58%, #21070c 100%);
+      border: 1px solid rgba(255,255,255,.12);
+      position: relative;
+      box-shadow: 0 18px 50px rgba(0,0,0,.45);
+    }
+    .detail-visual .mini-kokeshi::before {
+      content: "";
+      position: absolute;
+      top: 26px;
+      left: 50%; transform: translateX(-50%);
+      width: 78px; height: 78px; border-radius: 999px;
+      background: radial-gradient(circle at 50% 40%, #f3e5cb, #d6bea0 70%, #b89769 100%);
+    }
+    .detail h3 { margin: 0; font-size: 34px; font-weight: 500; }
+    .detail p { color: var(--muted); line-height: 1.9; }
+    .spec {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+      margin: 22px 0;
+    }
+    .spec-item {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .spec-item span { display: block; color: var(--muted2); font-size: 12px; text-transform: uppercase; letter-spacing: .14em; margin-bottom: 8px; }
+    .spec-item strong { font-size: 15px; line-height: 1.5; font-weight: 500; }
+    .line-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .line-card {
+      padding: 22px;
+      min-height: 270px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .line-card h4 { margin: 14px 0 6px; font-size: 20px; font-weight: 500; }
+    .line-card p { color: var(--muted); line-height: 1.8; font-size: 14px; }
+    .line-top { color: var(--muted2); font-size: 11px; text-transform: uppercase; letter-spacing: .16em; }
+    .line-price { color: var(--gold); font-size: 15px; letter-spacing: .1em; }
+    .line-note { color: var(--muted2); font-size: 13px; line-height: 1.7; }
+    .split {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 18px;
+    }
+    .service-card { padding: 24px; }
+    .service-card h4 { margin: 0 0 10px; font-size: 22px; font-weight: 500; }
+    .service-card p { color: var(--muted); line-height: 1.85; font-size: 15px; }
+    .form-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      padding: 28px;
+    }
+    .form-copy h3 { margin: 0 0 12px; font-size: 34px; font-weight: 500; }
+    .form-copy p { color: var(--muted); line-height: 1.9; }
+    form { display: grid; gap: 14px; }
+    input, select, textarea {
+      width: 100%;
+      padding: 16px 18px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px;
+      color: var(--text);
+      font: inherit;
+    }
+    textarea { min-height: 140px; resize: vertical; }
+    footer {
+      padding: 18px 0 44px;
+      color: var(--muted2);
+      font-size: 13px;
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (max-width: 1080px) {
+      .hero-grid, .selection-grid, .form-panel, .split { grid-template-columns: 1fr; }
+      .line-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .detail { position: static; }
+    }
+    @media (max-width: 720px) {
+      .container { width: min(100% - 28px, 1180px); }
+      .cards, .line-grid { grid-template-columns: 1fr; }
+      .hero-card { min-height: 500px; }
+      .hero-note { flex-direction: column; align-items: start; }
+      .spec { grid-template-columns: 1fr; }
+      .nav-actions .pill:not(.cta) { display: none; }
+    }
+  </style>
+</head>
+<body class="grain">
+  <div class="cursor-glow" id="cursorGlow"></div>
+  <div class="wrap">
+    <header>
+      <div class="container nav">
+        <div class="brand">Tokyo こけし / Luxury Web Experience</div>
+        <div class="nav-actions">
+          <a class="pill" href="#collection">Collection</a>
+          <a class="pill" href="#gifting">Gifting</a>
+          <a class="pill cta" href="#concierge">選定を依頼する</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="fade-up visible">
+            <div class="eyebrow">Tokyo Gift for a Quiet Taste</div>
+            <h1>東京の夜を、<br>静かに持ち帰る。</h1>
+            <p class="sub">
+              記念品ではありません。<br>
+              Tokyo こけしは、東京の余白と緊張感を贈るための存在です。<br>
+              購入ではなく、選定体験として設計します。
+            </p>
+            <div class="hero-actions">
+              <a href="#collection" class="button primary">静かに、選ぶ</a>
+              <a href="#concierge" class="button">選定を依頼する</a>
+            </div>
+          </div>
+
+          <div class="hero-card fade-up visible">
+            <div class="kokeshi-sculpture">
+              <div class="kokeshi">
+                <div class="kokeshi-body">
+                  <div class="face">
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="mouth"></div>
+                  </div>
+                  <div class="floral"></div>
+                </div>
+              </div>
+            </div>
+            <div class="hero-note">
+              <p>
+                Tokyo Nocturne Signature<br>
+                静かな来客空間、役員贈答、選ばれた個人ギフトへ。
+              </p>
+              <div class="price-chip">From ¥58,000</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="collection">
+        <div class="container">
+          <div class="section-head fade-up">
+            <div class="section-kicker">Selection</div>
+            <h2 class="section-title">気分から選ぶ。<br>それが、品格のある導線です。</h2>
+            <p class="section-copy">
+              かわいい物を探すのではなく、贈る空気を選ぶ。<br>
+              Tokyo こけしは、静けさ・祝意・余韻という感情から選ばれる設計にします。
+            </p>
+          </div>
+
+          <div class="mood-row fade-up" id="moodRow"></div>
+
+          <div class="selection-grid">
+            <div class="cards" id="productCards"></div>
+            <aside class="panel detail fade-up" id="detailPanel"></aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="product-line">
+        <div class="container">
+          <div class="section-head fade-up">
+            <div class="section-kicker">Product Line</div>
+            <h2 class="section-title">高級感のある商材を、<br>最初から置く。</h2>
+            <p class="section-copy">
+              安い単品だけでは、ブランドは安く見えます。<br>
+              価格の階段を置くことで、単価ではなく選定理由で売れる構造に変えます。
+            </p>
+          </div>
+          <div class="line-grid fade-up" id="lineGrid"></div>
+        </div>
+      </section>
+
+      <section id="gifting">
+        <div class="container">
+          <div class="section-head fade-up">
+            <div class="section-kicker">Gift Paths</div>
+            <h2 class="section-title">贈り方まで、<br>静かに設計する。</h2>
+            <p class="section-copy">
+              個人ギフト、法人贈答、訪日客向け。<br>
+              同じ商品でも、入口を変えるだけで見え方は変わります。
+            </p>
+          </div>
+          <div class="split fade-up">
+            <article class="panel service-card">
+              <h4>Private Gift</h4>
+              <p>記念日や新生活祝いへ。手にした瞬間よりも、その後に残る気配を重視するギフト導線。</p>
+            </article>
+            <article class="panel service-card">
+              <h4>Executive Gifting</h4>
+              <p>就任祝い、海外来賓、役員訪問に。箱・証明書・名入れの整え方まで含めて、格を落とさない贈答体験。</p>
+            </article>
+            <article class="panel service-card">
+              <h4>Visitor Selection</h4>
+              <p>訪日客向けには、東京を持ち帰る体験として設計。英語カード、ホテル受け取り、軽やかな国際導線を想定。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="concierge">
+        <div class="container">
+          <div class="panel form-panel fade-up">
+            <div class="form-copy">
+              <div class="section-kicker">Concierge</div>
+              <h3>購入ではなく、<br>選定予約へ。</h3>
+              <p>
+                価格の前に、誰に贈るかを整える。<br>
+                用途、予算、渡す場面に合わせて、静かに一本を選定します。<br>
+                法人贈答にも対応できる設計です。
+              </p>
+            </div>
+            <form onsubmit="event.preventDefault(); showThanks();">
+              <input type="text" placeholder="お名前 / Name" required>
+              <select required>
+                <option value="">用途を選択</option>
+                <option>個人ギフト</option>
+                <option>法人贈答</option>
+                <option>訪日客向け</option>
+                <option>コレクション用</option>
+              </select>
+              <input type="text" placeholder="ご予算の目安 / Budget">
+              <input type="text" placeholder="お渡し予定日 / Delivery timing">
+              <textarea placeholder="贈る相手、用途、空気感のご希望をご記入ください。"></textarea>
+              <button class="button primary" type="submit">選定を依頼する</button>
+              <div id="thanks" style="display:none;color:var(--gold);font-size:14px;letter-spacing:.06em;">Request received. Quietly prepared.</div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        Tokyo こけし — A Quiet Luxury from Tokyo.
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const moods = [
+      { id: 'quiet', label: '静けさで選ぶ' },
+      { id: 'gift', label: '贈答で選ぶ' },
+      { id: 'collector', label: '限定感で選ぶ' },
+      { id: 'visitor', label: '東京らしさで選ぶ' },
+    ];
+
+    const products = [
+      {
+        id: 'quiet-1',
+        mood: 'quiet',
+        category: 'Quiet Signature',
+        name: 'Tokyo Nocturne',
+        price: '¥58,000',
+        copy: '深夜の東京を思わせる、静かな存在感。最初の一本に置けるシグネチャー商材。',
+        story: '黒と深紅を抑制して重ねた、夜のための一本。リビング、書斎、来客空間にそっと置いて成立する、静かな主張です。',
+        material: '木地 × 漆調仕上げ',
+        finish: '黒艶 / 深紅 / 金の抑制線',
+        use: '個人ギフト / 書斎 / 来客空間',
+        box: '黒桐箱・英文カード付',
+      },
+      {
+        id: 'gift-1',
+        mood: 'gift',
+        category: 'Executive Gift',
+        name: 'Ginza Urushi Edition',
+        price: '¥96,000',
+        copy: '役員贈答に耐える一本。手軽さではなく、見た瞬間の格で選ばせる商材。',
+        story: '艶を抑えた漆調の深みと、細い金線だけで構成した贈答モデル。会食後の手渡しにも、就任祝いにも馴染む佇まいです。',
+        material: '欅木地 × 漆調塗装',
+        finish: '墨黒 / 鈍金 / 桐箱内布貼り',
+        use: '役員訪問 / 就任祝い / 海外来賓',
+        box: '証明書・名入れ対応',
+      },
+      {
+        id: 'collector-1',
+        mood: 'collector',
+        category: 'Limited Piece',
+        name: 'Midnight Limited 12',
+        price: '¥148,000',
+        copy: '限定とは、騒がずに価値を上げる方法。数ではなく選ばれ方で魅せる。',
+        story: '年12本のみを想定した限定商材。ロット数の少なさを前面に出しすぎず、静かに希少性だけを残す設計です。',
+        material: '国産木地 × 手彩色',
+        finish: '濃藍 / 墨 / 箔の点描',
+        use: 'コレクター / 限定販売 / ギャラリー',
+        box: 'シリアル証明書付',
+      },
+      {
+        id: 'visitor-1',
+        mood: 'visitor',
+        category: 'Visitor Gift',
+        name: 'Aoyama Evening Pair',
+        price: '¥128,000',
+        copy: '東京を持ち帰るための二本組。訪日客にも、記念日にも美しくはまる。',
+        story: '都会の光と静けさをペアで表現したセット。ホテル配送、英文説明、ギフト包装まで含めることで国際導線に耐えます。',
+        material: '木地 × 漆調 + 布張り箱',
+        finish: '黒 / 生成り / 金線',
+        use: '訪日客 / 記念日 / ペアギフト',
+        box: '英語カード・ホテル納品可',
+      }
+    ];
+
+    const lineItems = [
+      {
+        tier: 'Signature',
+        name: 'Tokyo Nocturne',
+        price: '¥58,000',
+        copy: '静かなシグネチャー商材。最初の一本としてブランドの顔をつくる。',
+        note: '個人ギフト / 来客空間 / Tokyo souvenir ではなく Tokyo gift'
+      },
+      {
+        tier: 'Executive',
+        name: 'Ginza Urushi Edition',
+        price: '¥96,000',
+        copy: '役員贈答に耐える一本。見た瞬間に、安さを消す。',
+        note: '就任祝い / 海外来賓 / 桐箱・証明書・名入れ対応'
+      },
+      {
+        tier: 'Pair Set',
+        name: 'Shirogane Pair Set',
+        price: '¥128,000',
+        copy: '二本組で、関係性そのものを贈る。記念日向けの上位ライン。',
+        note: '夫婦 / 新生活 / 記念日 / 英文カード対応'
+      },
+      {
+        tier: 'Corporate Box',
+        name: 'Boardroom Gift Box',
+        price: '¥180,000',
+        copy: '法人贈答を上げる箱物商材。会議室に持ち込んだ瞬間の格を整える。',
+        note: '法人訪問 / VIP贈答 / 箱・包材・挨拶カード一式'
+      },
+      {
+        tier: 'Collector',
+        name: 'Private Collector Edition',
+        price: '¥240,000',
+        copy: '最上位の限定商材。数量ではなく、静かな希少性で選ばせる。',
+        note: '限定制作 / シリアル付 / 展示・受注販売向け'
+      }
+    ];
+
+    const moodRow = document.getElementById('moodRow');
+    const productCards = document.getElementById('productCards');
+    const detailPanel = document.getElementById('detailPanel');
+    const lineGrid = document.getElementById('lineGrid');
+    let activeMood = moods[0].id;
+    let activeProduct = products.find(p => p.mood === activeMood);
+
+    function renderMoods() {
+      moodRow.innerHTML = moods.map(m => `
+        <button class="mood-btn ${m.id === activeMood ? 'active' : ''}" onclick="setMood('${m.id}')">${m.label}</button>
+      `).join('');
+    }
+
+    function renderProducts() {
+      const visible = products.filter(p => p.mood === activeMood);
+      if (!visible.find(v => v.id === activeProduct.id)) activeProduct = visible[0];
+      productCards.innerHTML = visible.map(product => `
+        <article class="panel product-card ${product.id === activeProduct.id ? 'active' : ''}" onclick="setProduct('${product.id}')">
+          <div class="card-meta">
+            <span>${product.category}</span>
+            <span>${product.price}</span>
+          </div>
+          <h3 class="card-name">${product.name}</h3>
+          <div class="card-price">${product.price}</div>
+          <p class="card-copy">${product.copy}</p>
+        </article>
+      `).join('');
+      renderDetail();
+    }
+
+    function renderDetail() {
+      detailPanel.innerHTML = `
+        <div class="detail-visual">
+          <div class="mini-kokeshi"></div>
+        </div>
+        <h3>${activeProduct.name}</h3>
+        <p>${activeProduct.story}</p>
+        <div class="spec">
+          <div class="spec-item"><span>Material</span><strong>${activeProduct.material}</strong></div>
+          <div class="spec-item"><span>Finish</span><strong>${activeProduct.finish}</strong></div>
+          <div class="spec-item"><span>Use</span><strong>${activeProduct.use}</strong></div>
+          <div class="spec-item"><span>Box</span><strong>${activeProduct.box}</strong></div>
+        </div>
+        <a href="#concierge" class="button primary">この一本を選定する</a>
+      `;
+    }
+
+    function renderLine() {
+      lineGrid.innerHTML = lineItems.map(item => `
+        <article class="panel line-card">
+          <div>
+            <div class="line-top">${item.tier}</div>
+            <h4>${item.name}</h4>
+            <div class="line-price">${item.price}</div>
+            <p>${item.copy}</p>
+          </div>
+          <div class="line-note">${item.note}</div>
+        </article>
+      `).join('');
+    }
+
+    window.setMood = (moodId) => {
+      activeMood = moodId;
+      activeProduct = products.find(p => p.mood === moodId);
+      renderMoods();
+      renderProducts();
+    };
+
+    window.setProduct = (productId) => {
+      activeProduct = products.find(p => p.id === productId);
+      renderProducts();
+    };
+
+    window.showThanks = () => {
+      document.getElementById('thanks').style.display = 'block';
+    };
+
+    renderMoods();
+    renderProducts();
+    renderLine();
+
+    const glow = document.getElementById('cursorGlow');
+    window.addEventListener('mousemove', (e) => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top = e.clientY + 'px';
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
